@@ -813,3 +813,10 @@ FILE_UPLOAD_MAX_SIZE_EMAIL_AUTO_ATTACHMENT = 1024 * 1024 * config.getint("pretix
 FILE_UPLOAD_MAX_SIZE_OTHER = 1024 * 1024 * config.getint("pretix_file_upload", "max_size_other", fallback=10)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Enforcement
+
+INSTRLIB_EXE = "/home/jnz/.opam/4.14.0/bin/lifeboat"
+INSTRLIB_FORMULA = "policies/gdpr.mfotl"
+INSTRLIB_SIG = "policies/gdpr.sig"
+INSTRLIB_LOG = "log"
