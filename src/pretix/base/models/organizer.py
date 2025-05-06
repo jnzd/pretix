@@ -52,11 +52,28 @@ from i18nfield.strings import LazyI18nString
 
 from pretix.base.models.base import LoggedModel
 from pretix.base.validators import OrganizerSlugBanlistValidator
+from pretix.base.enforcer import logger
+
+from instrlib.django.orm import InstrumentORM
 
 from ..settings import settings_hierarkey
 from .auth import User
 
 
+def info_organizer(organizer):
+    try:
+        return str(organizer) # TODO: what info is needed here?
+    except:
+        return ""
+
+@InstrumentORM(
+    logger,
+    { "Oraganizer.settings_namespace",
+      "Organizer.name",
+      "Organizer.slug"
+    },
+    info = info_organizer
+)
 @settings_hierarkey.add(cache_namespace='organizer')
 class Organizer(LoggedModel):
     """
