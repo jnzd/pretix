@@ -32,6 +32,7 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations under the License.
 
+from typing import Set
 import string
 from datetime import date, datetime, time
 
@@ -62,18 +63,19 @@ from .auth import User
 
 def info_organizer(organizer):
     try:
-        return str(organizer) # TODO: what info is needed here?
+        return str(organizer.slug) # TODO: what info is needed here?
     except:
         return ""
 
-@InstrumentORM(
-    logger,
-    { "Oraganizer.settings_namespace",
-      "Organizer.name",
-      "Organizer.slug"
-    },
-    info = info_organizer
-)
+# @InstrumentORM(
+#     logger,
+#     { "Organizer.settings_namespace",
+#       "Organizer.name",
+#       "Organizer.slug",
+#     #   "Organizer.organizer" # hierarkey cache?
+#     },
+#     info = info_organizer
+# )
 @settings_hierarkey.add(cache_namespace='organizer')
 class Organizer(LoggedModel):
     """
@@ -260,6 +262,27 @@ def generate_api_token():
     return get_random_string(length=64, allowed_chars=string.ascii_lowercase + string.digits)
 
 
+# mapping: Set[str] = {"Team.name", "Team.organizer",
+#                      "Team.members", "Team.all_events",
+#                      "Team.limit_events", "Team.can_create_events",
+#                      "Team.can_change_teams", "Team.can_manage_customers",
+#                      "Team.can_manage_reusable_media", "Team.can_change_organizer_settings",
+#                      "Team.can_change_event_settings", "Team.can_change_items",
+#                      "Team.can_view_orders", "Team.can_change_orders",
+#                      "Team.can_checkin_orders", "Team.can_view_vouchers",
+#                      "Team.can_change_vouchers" }
+
+# def info_team(team):
+#     try:
+#         return str(team.name)
+#     except:
+#         return ""
+
+# @InstrumentORM(
+#     logger,
+#     mapping,
+#     info=info_team
+# )
 class Team(LoggedModel):
     """
     A team is a collection of people given certain access rights to one or more events of an organizer.

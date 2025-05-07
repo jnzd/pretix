@@ -56,6 +56,10 @@ from webauthn.helpers.structs import PublicKeyCredentialDescriptor
 from pretix.base.i18n import language
 from pretix.helpers.urls import build_absolute_uri
 
+from pretix.base.enforcer import logger
+
+from instrlib.django.orm import InstrumentORM
+
 from ...helpers.countries import FastCountryField
 from ...helpers.u2f import pub_key_from_der, websafe_decode
 from .base import LoggingMixin
@@ -211,6 +215,19 @@ class SuperuserPermissionSet:
         return True
 
 
+# def info_user(user):
+#     try:
+#         return str(user.email) # TODO: what info is needed here?
+#     except:
+#         return ""
+
+# @InstrumentORM(
+#     logger,
+#     { "User.email",
+#       "User.fullname",
+#     },
+#     info = info_user
+# )
 class User(AbstractBaseUser, PermissionsMixin, LoggingMixin):
     """
     This is the user model used by pretix for authentication.

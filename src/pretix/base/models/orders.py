@@ -85,6 +85,10 @@ from pretix.base.settings import PERSON_NAME_SCHEMES
 from pretix.base.signals import allow_ticket_download, order_gracefully_delete
 from pretix.base.timemachine import time_machine_now
 
+from pretix.base.enforcer import logger as enforcer_logger
+
+from instrlib.django.orm import InstrumentORM
+
 from ...helpers import OF_SELF
 from ...helpers.countries import CachedCountries, FastCountryField
 from ...helpers.format import format_map
@@ -136,6 +140,18 @@ class OrderQuerySet(models.QuerySet):
         return order
 
 
+def info_order(order):
+    try:
+        return str(order.email) # TODO: what info is needed here?
+    except:
+        return ""
+
+@InstrumentORM(
+    enforcer_logger,
+    { "Order.email",
+    },
+    info = info_order
+)
 class Order(LockModel, LoggedModel):
     """
     An order is created when a user clicks 'buy' on his cart. It holds

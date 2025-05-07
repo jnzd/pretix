@@ -27,4 +27,4 @@ mp = Mapping(sup_event_map=sup_event_map, cau_event_map=cau_event_map)
 
 # Logger
 
-logger = Logger(mp, Schema(), enfpal)
+logger = Logger(mp, Schema(), enfpal, cache_timeout=30)
