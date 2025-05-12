@@ -153,6 +153,10 @@
                                     class="fa fa-caret-down"></i></a>
                             <a href="?{% url_replace request 'ordering' 'status' %}"><i class="fa fa-caret-up"></i></a>
                         </th>
+                        <th class="text-right flip">{% trans "Marketing Consent" %}
+                            <a href="?{% url_replace request 'ordering' '-marketing_email_consent' %}"><i class="fa fa-caret-down"></i></a>
+                            <a href="?{% url_replace request 'ordering' 'marketing_email_consent' %}"><i class="fa fa-caret-up"></i></a>
+                        </th>
                     </tr>
                     {% if page_obj.paginator.num_pages > 1 and "can_change_orders" in request.eventpermset %}
                         <tr class="table-select-all warning hidden">
@@ -241,6 +245,13 @@
                             </td>
                             <td class="text-right flip">{{ o.pcnt|default_if_none:"0" }}</td>
                             <td class="text-right flip">{% include "pretixcontrol/orders/fragment_order_status.html" with order=o %}</td>
+                            <td class="text-right flip">
+                                {% if o.marketing_email_consent %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -275,6 +286,7 @@
                                     {% endif %}
                                 {% endif %}
                             </th>
+                            <th></th>
                             <th></th>
                         </tr>
                         </tfoot>

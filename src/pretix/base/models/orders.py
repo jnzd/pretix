@@ -340,6 +340,11 @@ class Order(LockModel, LoggedModel):
         # Invoice needs to be re-issued when the order is paid again
         default=False,
     )
+    marketing_email_consent = models.BooleanField(
+        default=False,
+        verbose_name=_("Marketing email consent"),
+        help_text=_("Indicates whether the user has consented to receive marketing emails.")
+    )
 
     objects = ScopedManager(OrderQuerySet.as_manager().__class__, organizer='event__organizer')
 
@@ -1230,6 +1235,10 @@ class Order(LockModel, LoggedModel):
                 'pretix.event.order.email.resend', user=user, auth=auth,
                 attach_tickets=True,
             )
+
+    def toggle_marketing_consent(self):
+        self.marketing_email_consent = not self.marketing_email_consent
+        self.save(update_fields=['marketing_email_consent'])
 
     @property
     def positions_with_tickets_ignoring_plugins(self):

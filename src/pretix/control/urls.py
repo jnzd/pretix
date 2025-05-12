@@ -372,6 +372,8 @@ urlpatterns = [
                 name='event.order.resendlink'),
         re_path(r'^orders/(?P<code>[0-9A-Z]+)/(?P<position>\d+)/resend$', orders.OrderResendLink.as_view(),
                 name='event.order.resendlink'),
+        re_path(r'^orders/(?P<code>[0-9A-Z]+)/togglemarketingconsent$', orders.OrderToggleMarketingConsent.as_view(),
+                name='event.order.togglemarketingconsent'),
         re_path(r'^orders/(?P<code>[0-9A-Z]+)/invoice$', orders.OrderInvoiceCreate.as_view(),
                 name='event.order.geninvoice'),
         re_path(r'^orders/(?P<code>[0-9A-Z]+)/invoices/(?P<id>\d+)/regenerate$', orders.OrderInvoiceRegenerate.as_view(),

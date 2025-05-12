@@ -42,6 +42,10 @@ from pretix.helpers.countries import FastCountryField
 from pretix.helpers.names import build_name
 
 
+from pretix.base.enforcer import logger as enforcer_logger
+
+from instrlib.django.orm import InstrumentORM
+
 class CustomerSSOProvider(LoggedModel):
     METHOD_OIDC = 'oidc'
     METHODS = (
@@ -71,6 +75,18 @@ class CustomerSSOProvider(LoggedModel):
         return not self.customers.exists()
 
 
+def info_customer(customer):
+    try:
+        return str(customer.email) # TODO: what info is needed here?
+    except:
+        return ""
+
+@InstrumentORM(
+    enforcer_logger,
+    { "Customer.email",
+    },
+    info = info_customer
+)
 class Customer(LoggedModel):
     """
     Represents a registered customer of an organizer.
@@ -107,6 +123,11 @@ class Customer(LoggedModel):
     last_modified = models.DateTimeField(auto_now=True)
     external_identifier = models.CharField(max_length=255, verbose_name=_('External identifier'), null=True, blank=True)
     notes = models.TextField(verbose_name=_('Notes'), null=True, blank=True)
+    marketing_email_consent = models.BooleanField(
+        default=False,
+        verbose_name=_("Marketing email consent"),
+        help_text=_("Indicates whether the customer has consented to receive marketing emails.")
+    )
 
     objects = ScopedManager(organizer='organizer')
 

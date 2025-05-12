@@ -1743,6 +1743,17 @@ class OrderResendLink(OrderView):
     def get(self, *args, **kwargs):
         return HttpResponseNotAllowed(['POST'])
 
+class OrderToggleMarketingConsent(OrderView):
+    permission = 'can_change_orders'
+
+    def post(self, *args, **kwargs):
+        self.order.toggle_marketing_consent()
+
+        messages.success(self.request, _('The email marketing consent has been updated.'))
+        return redirect(self.get_order_url())
+
+    def get(self, *args, **kwargs):
+        return HttpResponseNotAllowed(['POST'])
 
 class InvoiceDownload(EventPermissionRequiredMixin, View):
     permission = 'can_view_orders'

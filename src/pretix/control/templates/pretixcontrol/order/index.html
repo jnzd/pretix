@@ -253,6 +253,28 @@
                                 {% endif %}
                             {% endif %}
                         </dd>
+                        <dt>{% trans "Marketing Consent" %}</dt>
+                        <dd>
+                            {% if order.marketing_email_consent %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                            {% if "can_change_orders" in request.eventpermset %}
+                                {% csrf_token %}
+                                <form class="form-inline helper-display-inline" method="post"
+                                        action="{% url "control:event.order.togglemarketingconsent" event=request.event.slug organizer=request.event.organizer.slug code=order.code %}">
+                                {% csrf_token %}
+                                    <button class="btn btn-default btn-xs">
+                                        {% if order.marketing_email_consent %}
+                                            {% trans "Remove Consent" %}
+                                        {% else %}
+                                            {% trans "Give Consent" %}
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </dd>
                         {% if order.phone or request.event.settings.order_phone_asked %}
                             <dt>{% trans "Phone number" %}</dt>
                             <dd>
