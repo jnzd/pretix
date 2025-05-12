@@ -46,8 +46,10 @@ from pretix.base.services.tasks import ProfiledEventTask
 from pretix.celery_app import app
 from pretix.helpers.format import format_map
 
+from instrlib.django.purposes import with_purpose
 
 @app.task(base=ProfiledEventTask, acks_late=True)
+@with_purpose('marketing') # TODO: this is too broad, there should be a separate function for sending marketing emails
 def send_mails_to_orders(event: Event, user: int, subject: dict, message: dict, objects: list, items: list,
                          subevent: int, subevents_from: datetime, subevents_to: datetime,
                          recipients: str, filter_checkins: bool, not_checked_in: bool, checkin_lists: list,
